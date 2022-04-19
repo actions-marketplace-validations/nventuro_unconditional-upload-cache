@@ -167,12 +167,15 @@ test("save on GHES with AC available", async () => {
     expect(failedMock).toHaveBeenCalledTimes(0);
 });
 
-test("save with exact match returns early", async () => {
-    const infoMock = jest.spyOn(core, "info");
+test("save with exact match also saves", async () => {
     const failedMock = jest.spyOn(core, "setFailed");
 
     const primaryKey = "Linux-node-bb828da54c148048dd17899ba9fda624811cfb43";
     const savedCacheKey = primaryKey;
+
+    const inputPath = "node_modules";
+    testUtils.setInput(Inputs.Path, inputPath);
+    testUtils.setInput(Inputs.UploadChunkSize, "4000000");
 
     jest.spyOn(core, "getState")
         // Cache Entry State
@@ -187,10 +190,10 @@ test("save with exact match returns early", async () => {
 
     await run();
 
-    expect(saveCacheMock).toHaveBeenCalledTimes(0);
-    expect(infoMock).toHaveBeenCalledWith(
-        `Cache hit occurred on the primary key ${primaryKey}, not saving cache.`
-    );
+    expect(saveCacheMock).toHaveBeenCalledTimes(1);
+    expect(saveCacheMock).toHaveBeenCalledWith([inputPath], primaryKey, {
+        uploadChunkSize: 4000000
+    });
     expect(failedMock).toHaveBeenCalledTimes(0);
 });
 
