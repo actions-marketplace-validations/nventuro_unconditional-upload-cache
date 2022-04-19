@@ -1,6 +1,6 @@
 name: 'unconditional-upload-cache'
 description: 'Fork of always-upload-cache which saves cache even on key hit'
-author: 'pat-s'
+author: 'nventuro'
 inputs:
   path:
     description: 'A list of files, directories, and wildcard patterns to cache and restore'
